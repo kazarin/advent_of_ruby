@@ -2,7 +2,7 @@
 
 class Day1
   def part1
-    cols = input.strip.split("\n").map { |row| row.split('   ').map(&:to_i) }.transpose.map(&:sort).transpose
+    cols = prepared_input.transpose.map(&:sort).transpose
 
     cols.reduce(0) do |acc, row|
       acc += (row[1] - row[0]).abs
@@ -11,7 +11,7 @@ class Day1
   end
 
   def part2
-    cols = input.strip.split("\n").map { |row| row.split('   ').map(&:to_i) }.transpose
+    cols = prepared_input.transpose
     occurences = cols[1].tally
     cols[0].reduce(0) do |acc, num|
       acc += num * (occurences[num] || 0)
@@ -23,5 +23,9 @@ class Day1
 
   def input
     File.read('input/day1.txt')
+  end
+
+  def prepared_input
+    @prepared_input ||= input.strip.split("\n").map { |row| row.split('   ').map(&:to_i) }
   end
 end
