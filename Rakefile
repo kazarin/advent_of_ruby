@@ -14,6 +14,7 @@ Minitest::TestTask.create
   klass = "day#{day_id}"
   task klass do
     solution = Object.const_get(klass.camelize).new
+    puts "Day #{day_id}"
     puts "part 1: #{solution.part1}"
     puts "part 2: #{solution.part2}"
   end
