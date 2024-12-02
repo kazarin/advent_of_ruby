@@ -2,25 +2,18 @@
 
 class Day2
   def part1
-    rows = input.split("\n").map { |row| row.split.map(&:to_i) }
-    rows.reduce(0) do |acc, row|
-      safe?(row) ? acc + 1 : acc
-    end
+    rows.sum { |row| safe?(row) ? 1 : 0 }
   end
 
   def part2
-    rows = input.split("\n").map { |row| row.split.map(&:to_i) }
-    rows.reduce(0) do |acc, row|
-      acc += if safe?(row)
-               1
-             else
-               possibly_safe?(row) ? 1 : 0
-             end
-      acc
-    end
+    rows.sum { |row| safe?(row) || possibly_safe?(row) ? 1 : 0 }
   end
 
   private
+
+  def rows
+    @rows ||= input.split("\n").map { |row| row.split.map(&:to_i) }
+  end
 
   def input
     File.read('input/day2.txt')
