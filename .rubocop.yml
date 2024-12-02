@@ -1,0 +1,68 @@
+AllCops:
+  NewCops: enable
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_first_argument
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: compact
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/SpaceInLambdaLiteral:
+  EnforcedStyle: require_space
+
+Layout/EmptyLineAfterMultilineCondition:
+  Enabled: true
+
+Layout/FirstArrayElementLineBreak:
+  Enabled: true
+
+Layout/FirstHashElementLineBreak:
+  Enabled: true
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/FormatString:
+  EnforcedStyle: percent
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/MissingRespondToMissing:
+  Enabled: false
+
+Style/EmptyCaseCondition:
+  Enabled: false
+
+Style/YodaCondition:
+  Enabled: false
+
+Style/BlockDelimiters:
+  AllowedPatterns: ['let', 'let!', 'expect', 'subject']
+
+Security/Open:
+  Exclude:
+    - Rakefile
+
+Lint/EmptyBlock:
+  Exclude:
+    - Rakefile
+
+Metrics/BlockLength:
+  Exclude:
+    - Rakefile
