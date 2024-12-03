@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
-require 'day1'
-
 class TestDay1 < Minitest::Test
   def setup
     @solution = Day1.new

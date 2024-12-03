@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'minitest/test_task'
 require 'zeitwerk'
+
+require 'minitest/test_task'
 
 require 'active_support/core_ext/string'
 
