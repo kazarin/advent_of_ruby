@@ -11,16 +11,16 @@ class Day3
     instructions.sum do |row|
       enabled = false if row == "don't()"
       enabled = true if row == 'do()'
-      if enabled && row != 'do()'
-        a, b = row.scan(/(\d*),(\d*)/).flatten.map(&:to_i)
-        a * b
-      else
-        0
-      end
+      enabled && row != 'do()' ? calculate(row) : 0
     end
   end
 
   private
+
+  def calculate(row)
+    a, b = row.scan(/(\d*),(\d*)/).flatten.map(&:to_i)
+    a * b
+  end
 
   def input
     File.read('input/day3.txt')
