@@ -15,7 +15,7 @@ end
 DIRECTIONS = ([-1, 0, 1].product([-1, 0, 1]) - [[0, 0]])
 PATTERNS = [%w[S A M], %w[M A S]].freeze
 
-class Day4
+class Day4 < Base
   using ArrayWithoutNegativeIndex
   def part1
     result = 0
@@ -27,12 +27,6 @@ class Day4
       end
     end
     result
-  end
-
-  def sequence?(row_index, col_index, row_step, col_step)
-    %w[X M A S].each_with_index.all? do |token, index|
-      grid[row_index + (index * row_step)]&.[](col_index + (index * col_step)) == token
-    end
   end
 
   def part2
@@ -65,7 +59,9 @@ class Day4
     @grid ||= input.split("\n").map(&:chars)
   end
 
-  def input
-    File.read('input/day4.txt')
+  def sequence?(row_index, col_index, row_step, col_step)
+    %w[X M A S].each_with_index.all? do |token, index|
+      grid[row_index + (index * row_step)]&.[](col_index + (index * col_step)) == token
+    end
   end
 end

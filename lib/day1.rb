@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Day1
+class Day1 < Base
   def part1
     cols = prepared_input.transpose.map(&:sort).transpose
 
@@ -14,10 +14,6 @@ class Day1
   end
 
   private
-
-  def input
-    File.read('input/day1.txt')
-  end
 
   def prepared_input
     @prepared_input ||= input.strip.split("\n").map { |row| row.split('   ').map(&:to_i) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Day2
+class Day2 < Base
   def part1
     rows.sum { |row| safe?(row) ? 1 : 0 }
   end
@@ -13,10 +13,6 @@ class Day2
 
   def rows
     @rows ||= input.split("\n").map { |row| row.split.map(&:to_i) }
-  end
-
-  def input
-    File.read('input/day2.txt')
   end
 
   def safe?(row) # rubocop:disable Metrics/CyclomaticComplexity
