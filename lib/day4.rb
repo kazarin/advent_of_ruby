@@ -1,55 +1,45 @@
 # frozen_string_literal: true
 
-module ArrayNegativeIndexPatch
+module ArrayWithoutNegativeIndex
   refine Array do
     alias_method :original_brackets, :[]
 
     def [](index)
-      return nil if index.is_a?(Integer) && index < 0
+      return nil if index.negative?
+
       original_brackets(index)
     end
   end
 end
 
+DIRECTIONS = ([-1, 0, 1].product([-1, 0, 1]) - [[0, 0]])
+PATTERNS = [%w[S A M], %w[M A S]].freeze
+
 class Day4
-  using ArrayNegativeIndexPatch
+  using ArrayWithoutNegativeIndex
   def part1
-    tokens = input.split("\n").map(&:chars)
-
     result = 0
-
-    tokens.each.with_index do |row, row_index|
-      fw = bw = up = down = ne = se = nw = sw = 0
-
-      row.each.with_index do |col, col_index|
-        fw = row[col_index..col_index + 3] == ['X', 'M', 'A', 'S'] ? fw += 1 : fw
-        bw = row[col_index-3..col_index] == ['S', 'A', 'M', 'X'] ? bw += 1 : bw
-        up = [tokens[row_index]&.[](col_index),  tokens[row_index-1]&.[](col_index), tokens[row_index-2]&.[](col_index), tokens[row_index-3]&.[](col_index)] == ['X', 'M', 'A', 'S'] ? up += 1 : up
-        down = [tokens[row_index]&.[](col_index),  tokens[row_index+1]&.[](col_index), tokens[row_index+2]&.[](col_index), tokens[row_index+3]&.[](col_index)] == ['X', 'M', 'A', 'S'] ? down += 1 : down
-        ne = [tokens[row_index]&.[](col_index),  tokens[row_index-1]&.[](col_index-1), tokens[row_index-2]&.[](col_index-2), tokens[row_index-3]&.[](col_index-3)] == ['X', 'M', 'A', 'S'] ? ne += 1 : ne
-        se = [tokens[row_index]&.[](col_index),  tokens[row_index+1]&.[](col_index-1), tokens[row_index+2]&.[](col_index-2), tokens[row_index+3]&.[](col_index-3)] == ['X', 'M', 'A', 'S'] ? se += 1 : se
-        nw = [tokens[row_index]&.[](col_index),  tokens[row_index-1]&.[](col_index+1), tokens[row_index-2]&.[](col_index+2), tokens[row_index-3]&.[](col_index+3)] == ['X', 'M', 'A', 'S'] ? nw += 1 : nw
-        sw = [tokens[row_index]&.[](col_index),  tokens[row_index+1]&.[](col_index+1), tokens[row_index+2]&.[](col_index+2), tokens[row_index+3]&.[](col_index+3)] == ['X', 'M', 'A', 'S'] ? sw += 1 : sw
-
+    grid.each_with_index do |row, row_index|
+      row.each.with_index do |_col, col_index|
+        DIRECTIONS.each do |row_step, col_step|
+          result += 1 if sequence?(row_index, col_index, row_step, col_step)
+        end
       end
-      result += fw + bw + up + down + + se + ne + nw + sw
     end
     result
   end
 
+  def sequence?(row_index, col_index, row_step, col_step)
+    %w[X M A S].each_with_index.all? do |token, index|
+      grid[row_index + (index * row_step)]&.[](col_index + (index * col_step)) == token
+    end
+  end
 
   def part2
     result = 0
-    tokens = input.split("\n").map(&:chars)
-    tokens.each.with_index do |row, row_index|
-      row.each.with_index do |col, col_index|
-        next unless col == 'A'
-        mas1 = [['S', 'A', 'M'], ['M', 'A', 'S']].include?([tokens[row_index-1]&.[](col_index-1),  tokens[row_index]&.[](col_index), tokens[row_index+1]&.[](col_index+1)]) ? true : false
-        mas2 = [['S', 'A', 'M'], ['M', 'A', 'S']].include?([tokens[row_index-1]&.[](col_index+1),  tokens[row_index]&.[](col_index), tokens[row_index+1]&.[](col_index-1)]) ? true : false
-
-        if mas1 && mas2
-          result += 1
-        end
+    grid.each.with_index do |row, row_index|
+      row.each.with_index do |_col, col_index|
+        result += 1 if left_diagonal?(row_index, col_index) && right_diagonal?(row_index, col_index)
       end
     end
     result
@@ -57,8 +47,25 @@ class Day4
 
   private
 
+  def left_diagonal?(row_index, col_index)
+    PATTERNS.include?([
+      grid[row_index - 1]&.[](col_index - 1), grid[row_index]&.[](col_index),
+      grid[row_index + 1]&.[](col_index + 1)
+    ])
+  end
+
+  def right_diagonal?(row_index, col_index)
+    PATTERNS.include?([
+      grid[row_index - 1]&.[](col_index + 1), grid[row_index]&.[](col_index),
+      grid[row_index + 1]&.[](col_index - 1)
+    ])
+  end
+
+  def grid
+    @grid ||= input.split("\n").map(&:chars)
+  end
+
   def input
     File.read('input/day4.txt')
   end
 end
-
