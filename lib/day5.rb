@@ -6,12 +6,10 @@ class Day5 < Base
   end
 
   def part2
-    result = 0
-    updates.each_with_index do |row, _index|
+    updates.sum do |row|
       sorted_row = sort(row)
-      result += sorted_row[row.length / 2] if sorted_row != row
+      sorted_row == row ? 0 : sorted_row[row.length / 2]
     end
-    result
   end
 
   private
