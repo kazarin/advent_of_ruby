@@ -66,3 +66,6 @@ Lint/EmptyBlock:
 Metrics/BlockLength:
   Exclude:
     - Rakefile
+Naming/MethodParameterName:
+  Exclude:
+    - lib/day8.rb
