@@ -19,7 +19,7 @@ class TestDay4 < Minitest::Test
 
   private
 
-  def input # rubocop:disable Metrics/MethodLength
+  def input
     'MMMSXXMASM
 MSAMXMSMSA
 AMXSXMAAMM

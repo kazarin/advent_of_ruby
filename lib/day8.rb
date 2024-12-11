@@ -39,7 +39,7 @@ class Day8 < Base
     @antennas ||= prepare[1]
   end
 
-  def prepare # rubocop:disable Metrics/MethodLength
+  def prepare
     @prepare ||=
       begin
         hash = {}
