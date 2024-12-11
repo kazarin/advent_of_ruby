@@ -69,6 +69,13 @@ Metrics/BlockLength:
 Naming/MethodParameterName:
   Exclude:
     - lib/day8.rb
+    - lib/day11.rb
 
 Metrics/MethodLength:
   Max: 15
+Style/MutableConstant:
+  Exclude:
+    - lib/day11.rb
+Metrics/AbcSize:
+  Exclude:
+    - lib/day11.rb
