@@ -69,3 +69,6 @@ Metrics/BlockLength:
 Naming/MethodParameterName:
   Exclude:
     - lib/day8.rb
+
+Metrics/MethodLength:
+  Max: 15
