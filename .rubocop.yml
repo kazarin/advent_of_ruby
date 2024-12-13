@@ -70,6 +70,7 @@ Naming/MethodParameterName:
   Exclude:
     - lib/day8.rb
     - lib/day11.rb
+    - lib/y2019/day2.rb
 
 Metrics/MethodLength:
   Max: 15
@@ -80,3 +81,4 @@ Metrics/AbcSize:
   Exclude:
     - lib/day11.rb
     - lib/day13.rb
+    - lib/y2019/day2.rb

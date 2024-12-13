@@ -20,3 +20,15 @@ Minitest::TestTask.create
     puts "part 2: #{solution.part2}"
   end
 end
+
+[2019].each do |year|
+  25.times.each do |day_id|
+    klass = "Y#{year}::Day#{day_id}"
+    task "#{year}-#{day_id}" do
+      solution = Object.const_get(klass).new
+      puts "Year #{year}, day #{day_id}"
+      puts "part 1: #{solution.part1}"
+      puts "part 2: #{solution.part2}"
+    end
+  end
+end
