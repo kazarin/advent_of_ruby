@@ -67,13 +67,11 @@ Metrics/BlockLength:
   Exclude:
     - Rakefile
 Naming/MethodParameterName:
-  Exclude:
-    - lib/day8.rb
-    - lib/day11.rb
-    - lib/y2019/day2.rb
+  Enabled: No
 
 Metrics/MethodLength:
-  Max: 15
+  Max: 20
+
 Style/MutableConstant:
   Exclude:
     - lib/day11.rb
