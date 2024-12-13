@@ -79,3 +79,4 @@ Style/MutableConstant:
 Metrics/AbcSize:
   Exclude:
     - lib/day11.rb
+    - lib/day13.rb
