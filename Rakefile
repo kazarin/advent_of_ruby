@@ -21,7 +21,7 @@ Minitest::TestTask.create
   end
 end
 
-[2019].each do |year|
+[2019, 2024].each do |year|
   25.times.each do |day_id|
     klass = "Y#{year}::Day#{day_id}"
     task "#{year}-#{day_id}" do

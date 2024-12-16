@@ -1,3 +1,6 @@
+inherit_from:
+  - ./.rubocop_todo.yml
+
 AllCops:
   NewCops: enable
 
@@ -76,6 +79,8 @@ Style/MutableConstant:
   Exclude:
     - lib/day11.rb
 Metrics/AbcSize:
+  Max:
+    25
   Exclude:
     - lib/day11.rb
     - lib/day13.rb

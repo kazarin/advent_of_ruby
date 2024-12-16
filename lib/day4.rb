@@ -12,10 +12,10 @@ module ArrayWithoutNegativeIndex
   end
 end
 
-DIRECTIONS = ([-1, 0, 1].product([-1, 0, 1]) - [[0, 0]])
 PATTERNS = [%w[S A M], %w[M A S]].freeze
 
 class Day4 < Base
+  DIRECTIONS = ([-1, 0, 1].product([-1, 0, 1]) - [[0, 0]])
   using ArrayWithoutNegativeIndex
   def part1
     result = 0

@@ -1,0 +1,4 @@
+AllCops:
+  Exclude:
+    - lib/day6.rb
+    - lib/day9.rb
