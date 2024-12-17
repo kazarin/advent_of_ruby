@@ -2,3 +2,4 @@ AllCops:
   Exclude:
     - lib/day6.rb
     - lib/day9.rb
+    - lib/y2024/day15.rb
