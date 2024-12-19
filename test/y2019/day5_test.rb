@@ -11,13 +11,16 @@ module Y2019
         out = capture_io do
           @solution.part1
         end
-        assert_equal "125\n", out.join
+        assert_equal "999\n", out.join
       end
     end
 
     def test_part2
       @solution.stub(:input, input) do
-        # assert_equal 27, @solution.part2
+        out = capture_io do
+          @solution.part2
+        end
+        assert_equal "999\n", out.join
       end
     end
 

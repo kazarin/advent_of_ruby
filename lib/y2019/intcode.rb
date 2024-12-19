@@ -11,7 +11,7 @@ module Y2019
       end
 
       def debug
-        # p "opcode: #{command[-2..]}, args: #{available_args}, args_with_modes: #{values}"
+        p "opcode: #{command[-2..]}, args: #{available_args}, args_with_modes: #{values}"
       end
 
       def command
@@ -50,31 +50,67 @@ module Y2019
     class Opcode1 < Opcode
       def proceed
         @instructions[@instructions[@pointer + 3]] = arg1 + arg2
+        @pointer + 4
       end
     end
 
     class Opcode2 < Opcode
       def proceed
         @instructions[@instructions[@pointer + 3]] = arg1 * arg2
+        @pointer + 4
       end
     end
 
     class Opcode3 < Opcode
       def proceed(op3)
         @instructions[@instructions[@pointer + 1]] = op3
+        @pointer + 2
+      end
+    end
+
+    class Opcode5 < Opcode
+      def proceed
+        return arg2 unless arg1.zero?
+
+        @pointer + 3
+      end
+    end
+
+    class Opcode6 < Opcode
+      def proceed
+        return arg2 if arg1.zero?
+
+        @pointer + 3
+      end
+    end
+
+    class Opcode7 < Opcode
+      def proceed
+        @instructions[@instructions[@pointer + 3]] = arg1 < arg2 ? 1 : 0
+        @pointer + 4
+      end
+    end
+
+    class Opcode8 < Opcode
+      def proceed
+        @instructions[@instructions[@pointer + 3]] = arg1 == arg2 ? 1 : 0
+        @pointer + 4
       end
     end
 
     class Opcode4 < Opcode
       def proceed
-        return if arg1.zero?
+        return @pointer + 2 if arg1.zero?
 
         p arg1
+        @pointer + 2
       end
     end
 
     class Opcode99 < Opcode
-      def proceed; end
+      def proceed
+        @pointer + 4
+      end
     end
 
     def initialize(input)
@@ -101,19 +137,20 @@ module Y2019
     def run(op3 = 0)
       left = 0
       offset = offset_for(instructions.first)
-      while left < instructions.length - offset
+      loop do
         command = instructions[left].to_s.rjust(4, '0')
         opcode = command[-2..].to_i
 
         return if opcode == 99
 
-        if [1, 2, 3, 4, 99].include?(opcode)
+        if [1, 2, 3, 4, 5, 6, 7, 8, 99].include?(opcode)
           klass = Intcode.const_get("Opcode#{opcode}")
           obj = klass.new(instructions, left)
-          opcode == 3 ? obj.proceed(op3) : obj.proceed
+          offset = opcode == 3 ? obj.proceed(op3) : obj.proceed
+        else
+          offset = left + 4
         end
-
-        left += offset_for(opcode)
+        left = offset
       end
     end
   end

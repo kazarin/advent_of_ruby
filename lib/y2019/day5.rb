@@ -7,6 +7,9 @@ module Y2019
       intcode.run(1)
     end
 
-    def part2; end
+    def part2
+      intcode = Intcode.new(input)
+      intcode.run(5)
+    end
   end
 end
