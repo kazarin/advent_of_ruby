@@ -2,20 +2,91 @@
 
 module Y2019
   class Intcode
-    def initialize(input)
-      @input = input
+    class Opcode
+      attr_reader :instructions
+
+      def initialize(instructions, pointer)
+        @instructions = instructions
+        @pointer = pointer
+      end
+
+      def debug
+        # p "opcode: #{command[-2..]}, args: #{available_args}, args_with_modes: #{values}"
+      end
+
+      def command
+        @command ||= @instructions[@pointer].to_s.rjust(4, '0')
+      end
+
+      def available_args
+        [@instructions[@pointer + 1], @instructions[@pointer + 2]]
+      end
+
+      def values
+        modes.zip(available_args)
+      end
+
+      def modes
+        command[0...-2].reverse.chars.map(&:to_i)
+      end
+
+      def arg((mode, value))
+        if mode.zero?
+          @instructions[value]
+        else
+          value
+        end
+      end
+
+      def arg1
+        arg(values[0])
+      end
+
+      def arg2
+        arg(values[1])
+      end
     end
 
-    def instructions
-      @instructions ||= @input.split(',').map(&:to_i)
+    class Opcode1 < Opcode
+      def proceed
+        @instructions[@instructions[@pointer + 3]] = arg1 + arg2
+      end
+    end
+
+    class Opcode2 < Opcode
+      def proceed
+        @instructions[@instructions[@pointer + 3]] = arg1 * arg2
+      end
+    end
+
+    class Opcode3 < Opcode
+      def proceed(op3)
+        @instructions[@instructions[@pointer + 1]] = op3
+      end
+    end
+
+    class Opcode4 < Opcode
+      def proceed
+        return if arg1.zero?
+
+        p arg1
+      end
+    end
+
+    class Opcode99 < Opcode
+      def proceed; end
+    end
+
+    def initialize(input)
+      @input = input
     end
 
     def opcode3(value, position)
       instructions[position] = value
     end
 
-    def opcode4(position)
-      instructions[position]
+    def instructions
+      @instructions ||= @input.split(',').map(&:to_i)
     end
 
     def offset_for(opcode)
@@ -27,50 +98,22 @@ module Y2019
       end
     end
 
-    def opcode1(vals, left)
-      a = get_arg(*vals[0])
-      b = get_arg(*vals[1])
-      instructions[instructions[left + 3]] = a + b
-    end
-
-    def opcode2(vals, left)
-      a = get_arg(*vals[0])
-      b = get_arg(*vals[1])
-      instructions[instructions[left + 3]] = a * b
-    end
-
     def run(op3 = 0)
       left = 0
       offset = offset_for(instructions.first)
       while left < instructions.length - offset
         command = instructions[left].to_s.rjust(4, '0')
         opcode = command[-2..].to_i
-        modes = command[0...-2].reverse.chars.map(&:to_i)
-        vals = modes.zip([instructions[left + 1], instructions[left + 2]])
 
-        case opcode
-        when 1
-          opcode1(vals, left)
-        when 2
-          opcode2(vals, left)
-        when 3
-          opcode3(op3, instructions[left + 1])
-        when 4
-          puts get_arg(*vals[0])
-        when 99
-          return
+        return if opcode == 99
+
+        if [1, 2, 3, 4, 99].include?(opcode)
+          klass = Intcode.const_get("Opcode#{opcode}")
+          obj = klass.new(instructions, left)
+          opcode == 3 ? obj.proceed(op3) : obj.proceed
         end
-        left += offset_for(opcode)
-      end
-    end
 
-    def get_arg(mode, value)
-      # positional
-      if mode.zero?
-        instructions[value]
-      # immediate
-      else
-        value
+        left += offset_for(opcode)
       end
     end
   end

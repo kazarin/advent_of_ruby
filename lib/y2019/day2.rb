@@ -7,7 +7,7 @@ module Y2019
       intcode.opcode3(12, 1)
       intcode.opcode3(2, 2)
       intcode.run
-      intcode.opcode4(0)
+      intcode.instructions[0]
     end
 
     def part2
@@ -16,7 +16,7 @@ module Y2019
         intcode.opcode3(a, 1)
         intcode.opcode3(b, 2)
         intcode.run
-        output = intcode.opcode4(0)
+        intcode.instructions[0]
         return (100 * a) + b if output == 19_690_720
       end
     end
