@@ -8,19 +8,13 @@ module Y2019
 
     def test_part1
       @solution.stub(:input, input) do
-        out = capture_io do
-          @solution.part1
-        end
-        assert_equal "999\n", out.join
+        assert_equal 999, @solution.part1.last
       end
     end
 
     def test_part2
       @solution.stub(:input, input) do
-        out = capture_io do
-          @solution.part2
-        end
-        assert_equal "999\n", out.join
+        assert_equal 999, @solution.part2.last
       end
     end
 

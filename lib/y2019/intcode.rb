@@ -5,9 +5,10 @@ module Y2019
     class Opcode
       attr_reader :instructions
 
-      def initialize(instructions, pointer)
+      def initialize(instructions, pointer, output)
         @instructions = instructions
         @pointer = pointer
+        @output = output
       end
 
       def debug
@@ -62,8 +63,13 @@ module Y2019
     end
 
     class Opcode3 < Opcode
-      def proceed(op3)
-        @instructions[@instructions[@pointer + 1]] = op3
+      def pass_input(arr)
+        @arr = arr
+      end
+
+      def proceed
+        @instructions[@instructions[@pointer + 1]] = @arr.first
+        @arr.insert(0, @arr.pop)
         @pointer + 2
       end
     end
@@ -102,7 +108,7 @@ module Y2019
       def proceed
         return @pointer + 2 if arg1.zero?
 
-        p arg1
+        @output << arg1
         @pointer + 2
       end
     end
@@ -115,6 +121,7 @@ module Y2019
 
     def initialize(input)
       @input = input
+      @output = []
     end
 
     def opcode3(value, position)
@@ -141,12 +148,13 @@ module Y2019
         command = instructions[left].to_s.rjust(4, '0')
         opcode = command[-2..].to_i
 
-        return if opcode == 99
+        return @output if opcode == 99
 
         if [1, 2, 3, 4, 5, 6, 7, 8, 99].include?(opcode)
           klass = Intcode.const_get("Opcode#{opcode}")
-          obj = klass.new(instructions, left)
-          offset = opcode == 3 ? obj.proceed(op3) : obj.proceed
+          obj = klass.new(instructions, left, @output)
+          obj.pass_input(op3) if opcode == 3
+          offset = obj.proceed
         else
           offset = left + 4
         end
