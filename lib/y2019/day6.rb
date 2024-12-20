@@ -27,11 +27,9 @@ module Y2019
       santa.reverse!
 
       left = 0
-      last = nil
       loop do
         break unless santa[left] == you[left]
 
-        last = santa[left]
         left += 1
       end
       (santa.length - left) + (you.length - left)
