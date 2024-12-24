@@ -5,10 +5,12 @@ module Y2019
     class Opcode
       attr_reader :instructions
 
-      def initialize(instructions, pointer, output)
+      def initialize(instructions, pointer, output, input_queue, output_queue)
         @instructions = instructions
         @pointer = pointer
         @output = output
+        @input_queue = input_queue
+        @output_queue = output_queue
       end
 
       def debug
@@ -63,14 +65,15 @@ module Y2019
     end
 
     class Opcode3 < Opcode
-      def pass_input(arr)
-        @arr = arr
-      end
-
       def proceed
-        @instructions[@instructions[@pointer + 1]] = @arr.first
-        @arr.insert(0, @arr.pop)
-        @pointer + 2
+        loop do
+          sleep 1 / 10_000_000
+          next if @input_queue.empty?
+
+          value = @input_queue.pop
+          @instructions[@instructions[@pointer + 1]] = value
+          return @pointer + 2
+        end
       end
     end
 
@@ -108,7 +111,7 @@ module Y2019
       def proceed
         return @pointer + 2 if arg1.zero?
 
-        @output << arg1
+        @output_queue << arg1
         @pointer + 2
       end
     end
@@ -119,13 +122,11 @@ module Y2019
       end
     end
 
-    def initialize(input)
+    def initialize(input, input_queue = Queue.new, output_queue = Queue.new)
       @input = input
       @output = []
-    end
-
-    def opcode3(value, position)
-      instructions[position] = value
+      @input_queue = input_queue
+      @output_queue = output_queue
     end
 
     def instructions
@@ -141,19 +142,18 @@ module Y2019
       end
     end
 
-    def run(op3 = 0)
+    def run(_op3 = 0)
       left = 0
       offset = offset_for(instructions.first)
       loop do
         command = instructions[left].to_s.rjust(4, '0')
         opcode = command[-2..].to_i
 
-        return @output if opcode == 99
+        return @output_queue if opcode == 99
 
         if [1, 2, 3, 4, 5, 6, 7, 8, 99].include?(opcode)
           klass = Intcode.const_get("Opcode#{opcode}")
-          obj = klass.new(instructions, left, @output)
-          obj.pass_input(op3) if opcode == 3
+          obj = klass.new(instructions, left, @output, @input_queue, @output_queue)
           offset = obj.proceed
         else
           offset = left + 4

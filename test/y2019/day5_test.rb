@@ -8,13 +8,13 @@ module Y2019
 
     def test_part1
       @solution.stub(:input, input) do
-        assert_equal 999, @solution.part1.last
+        assert_equal 999, @solution.part1
       end
     end
 
     def test_part2
       @solution.stub(:input, input) do
-        assert_equal 999, @solution.part2.last
+        assert_equal 999, @solution.part2
       end
     end
 
